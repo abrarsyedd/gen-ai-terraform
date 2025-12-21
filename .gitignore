@@ -1,0 +1,14 @@
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfstate.prev
+*.pem
+tfplan
+*.log
+*.tfvars
+*.tf.json
+resources.json
+audit_logs.json
+__pycache__/
+*.pyc
+modules/
