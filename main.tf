@@ -60,9 +60,41 @@ module "ec2_instance_3c2d02" {
   EOF
 }
 
+module "keypair_b4a61c" {
+  source                  = "./modules/keypair_b4a61c"
+  project_name            = "GenAI"
+  environment             = "dev"
+  name                    = "GenAI-keypair-b4a61c"
+}
+
+module "ec2_instance_b4a61c" {
+  source                  = "./modules/ec2_b4a61c"
+  project_name            = "GenAI"
+  environment             = "dev"
+  name                    = "GenAI-ec2-b4a61c"
+  instance_type           = "t2.micro"
+  subnet_id               = ""
+  vpc_subnets             = []
+  vpc_security_group_ids  = []
+  user_security_groups    = []
+  encrypted               = false
+  key_name                = module.keypair_b4a61c.key_name
+  user_data = <<-EOF
+  #!/bin/bash
+  yum update -y
+  yum install -y httpd
+  systemctl start httpd
+  systemctl enable httpd
+  echo "<h1>Hello World from $(hostname -f)</h1>" > /var/www/html/index.html
+  EOF
+}
+
 output "ec2_instance_id_2ccd21" { value = module.ec2_instance_2ccd21.instance_id }
 output "ec2_public_ip_2ccd21"     { value = module.ec2_instance_2ccd21.public_ip }
 output "ec2_private_ip_2ccd21"    { value = module.ec2_instance_2ccd21.private_ip }
 output "ec2_instance_id_3c2d02" { value = module.ec2_instance_3c2d02.instance_id }
 output "ec2_public_ip_3c2d02"     { value = module.ec2_instance_3c2d02.public_ip }
 output "ec2_private_ip_3c2d02"    { value = module.ec2_instance_3c2d02.private_ip }
+output "ec2_instance_id_b4a61c" { value = module.ec2_instance_b4a61c.instance_id }
+output "ec2_public_ip_b4a61c"     { value = module.ec2_instance_b4a61c.public_ip }
+output "ec2_private_ip_b4a61c"    { value = module.ec2_instance_b4a61c.private_ip }
